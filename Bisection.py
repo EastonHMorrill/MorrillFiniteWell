@@ -1,5 +1,7 @@
 import numpy as np
 
+max_iter = 10
+
 def find_sign_changes(f, step, a, b):
     x = a
     pairs = []
@@ -9,17 +11,20 @@ def find_sign_changes(f, step, a, b):
         x += step
     return pairs
 
-def bisection(f, pairs, tolerance):
+def bisection(f, pairs, tolerance, max_iter):
     zeroes = []
     for pair in pairs:
         midpoint = (pair[1] - pair[0])/2 + pair[0]
-        while (abs(f(midpoint)) > tolerance):
+        iter = 1
+        while (abs(f(midpoint)) > tolerance and iter < max_iter):
             if (f(midpoint)/f(pair[0]) < 0):
                 pair[1] = midpoint
             else:
                 pair[0] = midpoint
             midpoint = (pair[1] - pair[0])/2 + pair[0]
-        zeroes.append(midpoint)
+            iter += 1
+        if (iter < max_iter):
+            zeroes.append(midpoint)
     return zeroes
 
 def sinc(x):
@@ -28,8 +33,8 @@ def sinc(x):
     else:
         return np.sin(x)/x
 
-pairs = find_sign_changes(sinc, 0.1, 0, 10)
-print(pairs)
-zeroes = bisection(sinc, pairs, 1E-10)
-print(zeroes)
-print(np.pi, 2*np.pi, 3*np.pi)
+#pairs = find_sign_changes(sinc, 0.1, 0, 10)
+#print(pairs)
+#zeroes = bisection(sinc, pairs, 1E-10, 10)
+#print(zeroes)
+#print(np.pi, 2*np.pi, 3*np.pi)
